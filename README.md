@@ -122,6 +122,9 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { Header, Button } from 'react-native-elements';
 
 export default class App extends React.Component {
+  state = { searchTerm: '' };
+
+
   render() {
     return (
       <View>
@@ -135,6 +138,7 @@ export default class App extends React.Component {
           />
           <Button
             buttonStyle={styles.button}
+            title="Search"
           />
         </View>
       </View>
@@ -154,10 +158,43 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 30,
-    width: 40,
     marginBottom: 8
   }
 });
 ```
 
+Next we add a `state` variable to hold our searchTerm. `state` is a special keyword in react that will re-render components when changed with the setState function. 
 
+In our **TextInput** component we then update this state and the value of the text field to whatever is typed.
+
+In our **Button** component we add an `onPress` function that just logs our searchTerm for now.
+```javascript
+export default class App extends React.Component {
+  state = { searchTerm: '' };
+
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <View style={styles.container}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={searchTerm => this.setState({searchTerm})}
+            value={this.state.searchTerm}
+          />
+          <Button
+            buttonStyle={styles.button}
+            title="Search"
+            onPress={() => console.log(this.state.searchTerm)}
+          />
+        </View>
+      </View>
+    );
+  }
+}
+```
+Go ahead and test that you can type a search and see it logged when you press search.
+The log can be seen under your build tab on the DevTool browser page or where you ran `expo start`

@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { Header, Button } from 'react-native-elements';
 
 export default class App extends React.Component {
+  state = { searchTerm: '' };
+
   render() {
     return (
       <View>
@@ -13,9 +15,13 @@ export default class App extends React.Component {
         <View style={styles.container}>
           <TextInput
             style={styles.textInput}
+            onChangeText={searchTerm => this.setState({searchTerm})}
+            value={this.state.searchTerm}
           />
           <Button
             buttonStyle={styles.button}
+            title="Search"
+            onPress={() => console.log(this.state.searchTerm)}
           />
         </View>
       </View>
@@ -35,7 +41,6 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 30,
-    width: 40,
     marginBottom: 8
   }
 });

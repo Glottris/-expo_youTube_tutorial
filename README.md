@@ -84,7 +84,7 @@ export default class App extends React.Component {
 }
 ```
 I removed the styling from the view so the header is not centered.
-Now you application should lookmlike this:
+Now you application should look like this:
 ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample1.JPG "ExpoExample1")
 
 ## Search bar
@@ -114,7 +114,7 @@ export default class App extends React.Component {
 ```
 if we run it now it will look like this: ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample2.JPG "ExpoExample2")
 
-So we need to style our layout, add and action to the button and capture the search input.
+So we need to style our layout, add an action to the button and capture the search input.
 In this next step we add the styles. We change the flexDirection of the container style to `row` this means it will expand horizontally to fill the whole row.
 ```javascript
 import React from 'react';
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   }
 });
 ```
-
+---
 Next we add a `state` variable to hold our searchTerm. `state` is a special keyword in react that will re-render components when changed with the setState function. 
 
 In our **TextInput** component we then update this state and the value of the text field to whatever is typed.
@@ -198,3 +198,9 @@ export default class App extends React.Component {
 ```
 Go ahead and test that you can type a search and see it logged when you press search.
 The log can be seen under your build tab on the DevTool browser page or where you ran `expo start`
+
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample3.JPG "ExpoExample3")
+
+
+## Video List...
+

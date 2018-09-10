@@ -46,7 +46,6 @@ Now we can see our app running, it's just a white screen saying
 So open App.js in your preferred editor and change the text to the mandatory `Hello World`, save it twice and see it update on your device/emulator.
 
 ## Component structure
-
 Our app will contain tree main components, a header, a search-bar and a list of videos(search results).
 ``` 
 App
@@ -54,11 +53,9 @@ App
  +-- SearchBar /- inpurfield - button
  +-- VideoList
         +-- VideoListItem /- thumbnail - text
-        
 ```
 
 ## Header
-
 For the header we will use react-native-element package, so first we need to install it.
 ```bash
 npm install --save react-native-elements
@@ -67,9 +64,29 @@ yarn add react-native-elements
 ```
 Documentation: https://react-native-training.github.io/react-native-elements/docs/0.19.0/header.html#header-with-default-components
 
-Then we import it in our App.js file
+Then we import it in our App.js file, and add a new 'Header' element
 ```javascript
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Header } from 'react-native-elements';
 
-
+export default class App extends React.Component {
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+      </View>
+    );
+  }
+}
 ```
+I removed the styling from the view so the header is not centered.
+Now you application should lookmlike this:
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample1.JPG "ExpoExample1")
+
+
+
 

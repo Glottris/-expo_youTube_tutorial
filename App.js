@@ -5,8 +5,11 @@ import { Header } from 'react-native-elements';
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>works? baerly</Text>
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
       </View>
     );
   }

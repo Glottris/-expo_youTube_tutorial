@@ -87,6 +87,33 @@ I removed the styling from the view so the header is not centered.
 Now you application should lookmlike this:
 ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample1.JPG "ExpoExample1")
 
+## Search bar
+Our search bar will consist of two parts, an input filed and a button, wrapped in a 'View' component.
+We import `TextInput` from **react-native** and `Button` from **react-native-elements** and create a view underneath our header with one of each element
+```javascript
+import React from 'react';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { Header, Button } from 'react-native-elements';
 
+export default class App extends React.Component {
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTubeor', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <View>
+          <TextInput />
+          <Button />
+        </View>
+      </View>
+    );
+  }
+}
+```
+if we run it now it will look like this: ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample2.JPG "ExpoExample2")
+
+So we need to style our layout, add and action to the button and capture the search input.
 
 

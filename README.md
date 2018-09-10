@@ -115,5 +115,49 @@ export default class App extends React.Component {
 if we run it now it will look like this: ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample2.JPG "ExpoExample2")
 
 So we need to style our layout, add and action to the button and capture the search input.
+In this next step we add the styles. We change the flexDirection of the container style to `row` this means it will expand horizontally to fill the whole row.
+```javascript
+import React from 'react';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { Header, Button } from 'react-native-elements';
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <View style={styles.container}>
+          <TextInput
+            style={styles.textInput}
+          />
+          <Button
+            buttonStyle={styles.button}
+          />
+        </View>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInput: {
+    flex: 1
+  },
+  button: {
+    height: 30,
+    width: 40,
+    marginBottom: 8
+  }
+});
+```
 
 

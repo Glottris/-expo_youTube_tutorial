@@ -7,16 +7,17 @@ export default class App extends React.Component {
     return (
       <View>
         <Header
-          centerComponent={{text: 'YouTubeor', style: {color: '#fff'}}}
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
-
-        <View>
-          <TextInput />
-          <Button />
+        <View style={styles.container}>
+          <TextInput
+            style={styles.textInput}
+          />
+          <Button
+            buttonStyle={styles.button}
+          />
         </View>
-
-
       </View>
     );
   }
@@ -24,9 +25,17 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textInput: {
+    flex: 1
+  },
+  button: {
+    height: 30,
+    width: 40,
+    marginBottom: 8
+  }
 });

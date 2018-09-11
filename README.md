@@ -345,7 +345,7 @@ export default class App extends React.Component {
     this.searchYouTube(searchTerm)
   }
   searchYouTube = searchTerm => {
-    YTSearch({key: API_KEY, searchTerm}, videos => {
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
       console.log(videos);
     })
   }
@@ -380,7 +380,7 @@ state = {
   }
   searchYouTube = searchTerm => {
     this.setState({loading: true});
-    YTSearch({key: API_KEY, searchTerm}, videos => {
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
       console.log(videos);
       this.setState({loading: false});
     })
@@ -403,13 +403,94 @@ state = {
 }
 ```
 
-In **SearchBar.js** change the title to depend on the loading state, passed thru props.
+In **SearchBar.js** change the `Button` title to depend on the loading state, passed thru props.
 ```javascript
 title={this.props.loading ? "Loading..." : "Search"}
 ```
+### VideoList Component
+Now we are ready to make our `VideoList` and `VideoListItem` components.
+New file **VideoList.js**
+```javascript
+import React from 'react';
+import {ScrollView, View} from 'react-native';
 
+const VideoList = ({videos}) => {
+  const videoItems = videos.map( video => (
+    <View />
+  ));
 
+  return (
+    <ScrollView>
+      <View style={{marginBottom: 10,
+                    marginLeft: 10,
+                    marginRight: 10 }}>
+        {videoItems}
+      </View>
+    </ScrollView>
+  );
+};
 
+export default VideoList;
+```
+Here we prepare to use the data from the API, that we will read into objects using the *map* function. We return a `View` component inside a `ScrollView` component. The `View` component is styled with some margins and inside it we call a function called *videoItems*. Here we will put a videoListItem, but for now we just return an empty`View`
 
-## Further work
-move header to functional component..
+Now we go back to **App.js** and import our `VideoList` and add an element of it after our `SearchBar` passing in the videos list from our *state*
+**App.js**
+```javascript
+import VideoList from './VideoList'
+...
+  render() {
+    const {loading, videos} = this.state;
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          loading={this.state.loading}
+          onPressSearch={this.onPressSearch}
+        />
+        <VideoList videos={videos}/>
+      </View>
+    );
+```
+I also added a shorthand for `this.state` for the *loading* and *videos* variables.
+
+### VideoListItem Component
+New file **VideoListItem.js**
+```javascript
+import React from 'react';
+import { View, Text, Image} from 'react-native'
+
+const VideoListItem = ({video}) => {
+  return(
+    <View>
+      <Image
+        style={{ height: 180 }}
+        source={{uri: video.snippet.thumbnails.medium.url}}
+      />
+      <Text>{video.snippet.title}</Text>
+      <Text>{video.snippet.channelTitle}</Text>
+      <Text>{video.snippet.description}</Text>
+    </View>
+  );
+};
+
+export default VideoListItem;
+```
+Here we import the basic `View, Text, Image` from react native and return some tags filled with the data from a video object.
+
+Now we need to go back to **VideoList.js** and use this and pass in the video data.
+```javascript
+import VideoListItem from './VideoListItem'
+...
+  const videoItems = videos.map( video => (
+    <VideoListItem
+      key={video.etag}
+      video={video}
+    />
+  ));
+```
+
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample4.JPG "ExpoExample4")

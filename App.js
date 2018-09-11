@@ -3,12 +3,14 @@ import { StyleSheet, View } from 'react-native';
 import { Header } from 'react-native-elements';
 import { SearchBar } from './SearchBar';
 import YTSearch from 'youtube-api-search';
+import VideoList from './VideoList'
 
 const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 
 export default class App extends React.Component {
 state = {
-  loading: false
+  loading: false,
+  videos: []
 }
 
   onPressSearch = searchTerm => {
@@ -17,13 +19,13 @@ state = {
 
   searchYouTube = searchTerm => {
     this.setState({loading: true});
-    YTSearch({key: API_KEY, searchTerm}, videos => {
-      console.log(videos);
-      this.setState({loading: false});
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
+      this.setState({loading: false, videos: videos});
     })
   }
 
   render() {
+    const {loading, videos} = this.state;
     return (
       <View>
         <Header
@@ -31,9 +33,10 @@ state = {
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
         <SearchBar
-          loading={this.state.loading}
+          loading={loading}
           onPressSearch={this.onPressSearch}
         />
+        <VideoList videos={videos}/>
       </View>
     );
   }

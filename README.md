@@ -1,4 +1,5 @@
 
+
 # React-Native Expo you_tube_tutorial
 ## Overview
 This tutorial will go thru step by step how to make a video app that browse YouTube, using react-native, react-native extensions: React Navigation and YouTube API.v3
@@ -20,7 +21,7 @@ In your shell of preference at the location you wish to store the project run th
 > expo start
 ```
 This initiates new project with your chosen name.
-`start expo` will print an IP address like this:
+`start expo` will print an address like this:
  `> Expo DevTools is running at http://localhost:19002
 `Open this address in a browser.
 
@@ -155,7 +156,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    flex: 1
+    flex: 1,
+    marginLeft: 10
   },
   button: {
     height: 30,
@@ -201,6 +203,79 @@ Go ahead and test that you can type a search and see it logged when you press se
 The log can be seen under your build tab on the DevTool browser page or where you ran `expo start`
 
 ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample3.JPG "ExpoExample3")
+
+### Move SearchBar to a new component
+So we don't actually want to re-render our whole app every time someone types something, and we want to get a better overview of our main structure.
+So lets move the SearchBar to a new component in a new file.
+Create **SerachBar.js** and move the SearchBar to it.
+**SerachBar.js**
+```javascript
+import React from 'react';
+import { StyleSheet, View, TextInput } from 'react-native';
+import { Button } from 'react-native-elements';
+
+export class SearchBar extends React.Component {
+  state = { searchTerm: '' };
+  render() {
+    return (
+      <View style={styles.container}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={searchTerm => this.setState({searchTerm})}
+          value={this.state.searchTerm}
+        />
+        <Button
+          buttonStyle={styles.button}
+          title="Search"
+          onPress={() => console.log(this.state.searchTerm)}
+        />
+      </View>
+    );
+  }
+}
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInput: {
+    flex: 1,
+    marginLeft: 10
+  },
+  button: {
+    height: 30,
+    marginBottom: 8
+  }
+});
+```
+So we moved our styles and `View` encompassing the serachBar to this new file.
+Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component.
+And add it bellow our header
+**App.js**
+```javascript
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Header } from 'react-native-elements';
+import { SearchBar } from './SearchBar';
+
+export default class App extends React.Component {
+  state = { searchTerm: '' };
+
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar />
+      </View>
+    );
+  }
+}
+```
 
 
 ## Video List...

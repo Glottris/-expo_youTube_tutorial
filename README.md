@@ -310,5 +310,23 @@ onPress={() => this.props.onPressSearch(this.state.searchTerm)}
 the `props` keyword is short for properties, and is used like arguments to components.
 Test that it works :)
 
-## Video List...
+## Video List
+### YouTube API key
+Before we start creating our Video list we need to get the data, for this we need our  [YouTubeAPI key](https://github.com/appsupport-at-acorn/react-and-rn-intro/blob/master/tutorial/react/prerequisites.adoc#generate-a-youtube-api-key)
 
+for this simple tutorial we will just store the key in our **App.js** like this:
+```javascript
+const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
+```
+** NOTE that it's very poor security practice to store anything you wish to maintain secret in your application.**
+
+### Installing youtube-api-search plugin module
+in your project directory run
+```bash
+npm install --save youtube-api-search
+# or
+yarn add youtube-api-search
+```
+
+## Further work
+move header to functional component..

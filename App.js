@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Header } from 'react-native-elements';
 import { SearchBar } from './SearchBar';
 
+const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
+
 export default class App extends React.Component {
   onPressSearch = searchTerm => {
     console.log(searchTerm)

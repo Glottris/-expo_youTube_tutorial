@@ -7,14 +7,19 @@ import YTSearch from 'youtube-api-search';
 const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 
 export default class App extends React.Component {
+state = {
+  loading: false
+}
 
   onPressSearch = searchTerm => {
     this.searchYouTube(searchTerm)
   }
 
   searchYouTube = searchTerm => {
+    this.setState({loading: true});
     YTSearch({key: API_KEY, searchTerm}, videos => {
       console.log(videos);
+      this.setState({loading: false});
     })
   }
 
@@ -26,6 +31,7 @@ export default class App extends React.Component {
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
         <SearchBar
+          loading={this.state.loading}
           onPressSearch={this.onPressSearch}
         />
       </View>

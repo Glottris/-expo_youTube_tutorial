@@ -367,11 +367,46 @@ export default class App extends React.Component {
 ```
 Try this out and take a look at the log to see what we get from the YouTubeAPI.
 
+### Loading state (Optional?)
+In this section we create a loading state that is true while we wait for the YTSearch function to return and pass it to the search button.
 
+```javascript
+export default class App extends React.Component {
+state = {
+  loading: false
+}
+  onPressSearch = searchTerm => {
+    this.searchYouTube(searchTerm)
+  }
+  searchYouTube = searchTerm => {
+    this.setState({loading: true});
+    YTSearch({key: API_KEY, searchTerm}, videos => {
+      console.log(videos);
+      this.setState({loading: false});
+    })
+  }
 
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          loading={this.state.loading}
+          onPressSearch={this.onPressSearch}
+        />
+      </View>
+    );
+  }
+}
+```
 
-
-
+In **SearchBar.js** change the title to depend on the loading state, passed thru props.
+```javascript
+title={this.props.loading ? "Loading..." : "Search"}
+```
 
 
 

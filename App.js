@@ -4,8 +4,9 @@ import { Header } from 'react-native-elements';
 import { SearchBar } from './SearchBar';
 
 export default class App extends React.Component {
-  state = { searchTerm: '' };
-
+  onPressSearch = searchTerm => {
+    console.log(searchTerm)
+  }
   render() {
     return (
       <View>
@@ -13,7 +14,9 @@ export default class App extends React.Component {
           centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
-        <SearchBar />
+        <SearchBar
+          onPressSearch={this.onPressSearch}
+        />
       </View>
     );
   }

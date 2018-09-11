@@ -261,8 +261,6 @@ import { Header } from 'react-native-elements';
 import { SearchBar } from './SearchBar';
 
 export default class App extends React.Component {
-  state = { searchTerm: '' };
-
   render() {
     return (
       <View>
@@ -276,7 +274,41 @@ export default class App extends React.Component {
   }
 }
 ```
+### Passing back the searchTerm to our main app
+We need to get the search term back to our main application to fetch the data from the youTubeAPI to be displayed in the videoList.
+We do this by passing a function reference to our `SearchBar` object, that we then call when the search button is pressed.
+Adding a function in **App.js**, and passing it to `SearchBar`
+```javascript
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Header } from 'react-native-elements';
+import { SearchBar } from './SearchBar';
 
+export default class App extends React.Component {
+  onPressSearch = searchTerm => {
+    console.log(searchTerm)
+  }
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          onPressSearch={this.onPressSearch}
+        />
+      </View>
+    );
+  }
+}
+```
+And in **SearchBar** we change our `onPress` inside our Button compenent to:
+```javascript
+onPress={() => this.props.onPressSearch(this.state.searchTerm)}
+```
+the `props` keyword is short for properties, and is used like arguments to components.
+Test that it works :)
 
 ## Video List...
 

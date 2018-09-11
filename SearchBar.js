@@ -15,7 +15,7 @@ export class SearchBar extends React.Component {
         <Button
           buttonStyle={styles.button}
           title="Search"
-          onPress={() => console.log(this.state.searchTerm)}
+          onPress={() => this.props.onPressSearch(this.state.searchTerm)}
         />
       </View>
     );

@@ -1,8 +1,7 @@
 
-
 # React-Native Expo you_tube_tutorial
 ## Overview
-This tutorial will go thru step by step how to make a video app that browse YouTube, using react-native, react-native extensions: React Navigation and YouTube API.v3
+This tutorial will go thru step by step how to make a video app that browse YouTube, using Expo
 Insert Image here!
 
 ## Prerequisites
@@ -66,7 +65,7 @@ yarn add react-native-elements
 ```
 Documentation: https://react-native-training.github.io/react-native-elements/docs/0.19.0/header.html#header-with-default-components
 
-Then we import it in our App.js file, and add a new 'Header' element
+Then we import it in our **App.js** file, and add a new `Header` element
 ```javascript
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -119,21 +118,8 @@ if we run it now it will look like this: ![alt text](https://github.com/Glottris
 So we need to style our layout, add an action to the button and capture the search input.
 In this next step we add the styles. We change the flexDirection of the container style to `row` this means it will expand horizontally to fill the whole row.
 ```javascript
-import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { Header, Button } from 'react-native-elements';
-
-export default class App extends React.Component {
-  state = { searchTerm: '' };
-
-
-  render() {
     return (
-      <View>
-        <Header
-          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
-          outerContainerStyles={{backgroundColor: '#E62117'}}
-        />
+      ...
         <View style={styles.container}>
           <TextInput
             style={styles.textInput}
@@ -143,10 +129,7 @@ export default class App extends React.Component {
             title="Search"
           />
         </View>
-      </View>
-    );
-  }
-}
+...
 
 const styles = StyleSheet.create({
   container: {
@@ -208,6 +191,7 @@ The log can be seen under your build tab on the DevTool browser page or where yo
 So we don't actually want to re-render our whole app every time someone types something, and we want to get a better overview of our main structure.
 So lets move the SearchBar to a new component in a new file.
 Create **SerachBar.js** and move the SearchBar to it.
+
 **SerachBar.js**
 ```javascript
 import React from 'react';
@@ -251,8 +235,8 @@ const styles = StyleSheet.create({
 });
 ```
 So we moved our styles and `View` encompassing the serachBar to this new file.
-Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component.
-And add it bellow our header
+Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component. And add it bellow our header.
+
 **App.js**
 ```javascript
 import React from 'react';
@@ -316,7 +300,7 @@ Before we start creating our Video list we need to get the data, for this we nee
 
 for this simple tutorial we will just store the key in our **App.js** like this:
 ```javascript
-const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
+const API_KEY = 'YOUR-API-KEY-HERE' // or use mine 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 ```
 ** NOTE that it's very poor security practice to store anything you wish to maintain secret in your application.**
 
@@ -330,6 +314,7 @@ yarn add youtube-api-search
 ### Importing and calling youtube-api-search
 So now we import a function called `YTSearch` from the `youtube-api-search`.
 We create a new function that calls this with our `API_KEY` and `searchTerm` and log what is returned. We call this function from our `onPressSearch` passing it the `searchTerm`
+
 **App.js**
 ```javascript
 import React from 'react';
@@ -368,7 +353,7 @@ export default class App extends React.Component {
 Try this out and take a look at the log to see what we get from the YouTubeAPI.
 
 ### Loading state (Optional?)
-In this section we create a loading state that is true while we wait for the YTSearch function to return and pass it to the search button.
+In this section we create a loading state that is `true` while we wait for the YTSearch function to return and pass it to the search button.
 
 ```javascript
 export default class App extends React.Component {
@@ -409,6 +394,7 @@ title={this.props.loading ? "Loading..." : "Search"}
 ```
 ### VideoList Component
 Now we are ready to make our `VideoList` and `VideoListItem` components.
+
 New file **VideoList.js**
 ```javascript
 import React from 'react';
@@ -434,11 +420,28 @@ export default VideoList;
 ```
 Here we prepare to use the data from the API, that we will read into objects using the *map* function. We return a `View` component inside a `ScrollView` component. The `View` component is styled with some margins and inside it we call a function called *videoItems*. Here we will put a videoListItem, but for now we just return an empty`View`
 
-Now we go back to **App.js** and import our `VideoList` and add an element of it after our `SearchBar` passing in the videos list from our *state*
+Now we go back to **App.js** and import our `VideoList` component, store the video data in a list inside our `state` and add a `VideoList` element after our `SearchBar` passing in the videos list from our *state*
+
 **App.js**
 ```javascript
 import VideoList from './VideoList'
 ...
+export default class App extends React.Component {
+  state = {
+    loading: false,
+    videos: []
+  }
+
+  onPressSearch = searchTerm => {
+    this.searchYouTube(searchTerm)
+  }
+
+  searchYouTube = searchTerm => {
+    this.setState({loading: true});
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
+      this.setState({loading: false, videos: videos});
+    })
+  }
   render() {
     const {loading, videos} = this.state;
     return (
@@ -448,7 +451,7 @@ import VideoList from './VideoList'
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
         <SearchBar
-          loading={this.state.loading}
+          loading={loading}
           onPressSearch={this.onPressSearch}
         />
         <VideoList videos={videos}/>
@@ -461,7 +464,7 @@ I also added a shorthand for `this.state` for the *loading* and *videos* variabl
 New file **VideoListItem.js**
 ```javascript
 import React from 'react';
-import { View, Text, Image} from 'react-native'
+import { View, Text, Image } from 'react-native'
 
 const VideoListItem = ({video}) => {
   return(

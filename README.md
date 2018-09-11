@@ -327,6 +327,54 @@ npm install --save youtube-api-search
 # or
 yarn add youtube-api-search
 ```
+### Importing and calling youtube-api-search
+So now we import a function called `YTSearch` from the `youtube-api-search`.
+We create a new function that calls this with our `API_KEY` and `searchTerm` and log what is returned. We call this function from our `onPressSearch` passing it the `searchTerm`
+**App.js**
+```javascript
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Header } from 'react-native-elements';
+import { SearchBar } from './SearchBar';
+import YTSearch from 'youtube-api-search';
+
+const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
+
+export default class App extends React.Component {
+  onPressSearch = searchTerm => {
+    this.searchYouTube(searchTerm)
+  }
+  searchYouTube = searchTerm => {
+    YTSearch({key: API_KEY, searchTerm}, videos => {
+      console.log(videos);
+    })
+  }
+
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          onPressSearch={this.onPressSearch}
+        />
+      </View>
+    );
+  }
+}
+```
+Try this out and take a look at the log to see what we get from the YouTubeAPI.
+
+
+
+
+
+
+
+
+
 
 ## Further work
 move header to functional component..

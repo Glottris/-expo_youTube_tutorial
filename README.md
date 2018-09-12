@@ -10,6 +10,11 @@ Insert Image here!
 * YouTube API key
 * Android or IOS emulator
 
+## Optional Prerequisites
+* Atom
+* Visual Studio Code
+* Another text editor suitable for Javascript
+
 ## Setup [Expo](https://expo.io/)
 In your shell of preference at the location you wish to store the project run the following
 ``` bash
@@ -57,7 +62,7 @@ App
 ```
 
 ## Header
-For the header we will use react-native-element package, so first we need to install it.
+For the header we will use [react-native-element](https://react-native-training.github.io/react-native-elements) package, so first we need to install it.
 ```bash
 npm install --save react-native-elements
 # or with yarn
@@ -204,4 +209,3 @@ The log can be seen under your build tab on the DevTool browser page or where yo
 
 
 ## Video List...
-

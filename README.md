@@ -1,4 +1,5 @@
 
+
 # React-Native Expo you_tube_tutorial
 ## Overview
 This tutorial will go thru step by step how to make a video app that browse YouTube, using Expo
@@ -502,3 +503,73 @@ import VideoListItem from './VideoListItem'
 ```
 
 ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample4.JPG "ExpoExample4")
+
+
+## Card Styling
+
+In **VideoListItem.js** we import a `Card` component and add styling
+```javascript
+import React from 'react';
+import { View, Text, Image} from 'react-native'
+import { Card } from 'react-native-elements'
+
+const VideoListItem = ({video}) => {
+  const {card, image, textBox, title, channel, description} = styles;
+  return(
+    <View>
+      <Card containerStyle={card}>
+        <Image
+          style={image}
+          source={{uri: video.snippet.thumbnails.medium.url}}
+        />
+        <View style={textBox}>
+          <Text style={title}>
+            {video.snippet.title}
+          </Text>
+          <Text style={channel}>
+            {video.snippet.channelTitle}
+          </Text>
+          <Text style={description}>
+            {video.snippet.description}
+          </Text>
+        </View>
+      </Card>
+    </View>
+  );
+};
+
+const styles = {
+  card: {
+    padding: 5
+  },
+  image: {
+    alignSelf: 'stretch',
+    height: 180
+  },
+  textBox: {
+    flex: 1,
+    padding: 1
+  },
+  title: {
+    fontSize: 12,
+  },
+  channel: {
+    fontSize: 11,
+    color: '#777',
+    alignSelf: 'flex-end'
+  },
+  description: {
+    fontSize: 10,
+    alignSelf: 'center'
+  }
+};
+
+export default VideoListItem;
+```
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample5.JPG "ExpoExample5")
+
+!!! I had some problem here, on android emulator, when I can't scroll all the way down. The last part is hidden under the navigation bar, i added a style of `flex: 1` to the top `View` in **App.js** to workaround this. !!!
+
+
+
+## Play Video

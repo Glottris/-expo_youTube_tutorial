@@ -8,10 +8,10 @@ import VideoList from './VideoList'
 const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 
 export default class App extends React.Component {
-state = {
-  loading: false,
-  videos: []
-}
+  state = {
+    loading: false,
+    videos: []
+  }
 
   onPressSearch = searchTerm => {
     this.searchYouTube(searchTerm)
@@ -27,7 +27,7 @@ state = {
   render() {
     const {loading, videos} = this.state;
     return (
-      <View>
+      <View style={{flex:1}}>
         <Header
           centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}

@@ -15,5 +15,11 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-29.0.0.tar.gz",
     "react-native-elements": "^0.19.1",
     "youtube-api-search": "^0.0.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-native": "^4.0.0",
+    "flow-bin": "^0.79.1",
+    "flow-upgrade": "^1.0.4"
   }
 }

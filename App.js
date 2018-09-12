@@ -1,46 +1,43 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { Header, Button } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Header } from 'react-native-elements';
+import { SearchBar } from './SearchBar';
+import YTSearch from 'youtube-api-search';
+import VideoList from './VideoList'
+
+const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 
 export default class App extends React.Component {
-  state = { searchTerm: '' };
+state = {
+  loading: false,
+  videos: []
+}
+
+  onPressSearch = searchTerm => {
+    this.searchYouTube(searchTerm)
+  }
+
+  searchYouTube = searchTerm => {
+    this.setState({loading: true});
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
+      this.setState({loading: false, videos: videos});
+    })
+  }
 
   render() {
+    const {loading, videos} = this.state;
     return (
       <View>
         <Header
           centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
-        <View style={styles.container}>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={searchTerm => this.setState({searchTerm})}
-            value={this.state.searchTerm}
-          />
-          <Button
-            buttonStyle={styles.button}
-            title="Search"
-            onPress={() => console.log(this.state.searchTerm)}
-          />
-        </View>
+        <SearchBar
+          loading={loading}
+          onPressSearch={this.onPressSearch}
+        />
+        <VideoList videos={videos}/>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textInput: {
-    flex: 1
-  },
-  button: {
-    height: 30,
-    marginBottom: 8
-  }
-});

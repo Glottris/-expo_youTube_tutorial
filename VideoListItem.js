@@ -1,16 +1,18 @@
 import React from 'react';
 import { View, Text, Image} from 'react-native'
 import { Card } from 'react-native-elements'
+import { Video } from './Video'
 
 const VideoListItem = ({video}) => {
   const {card, image, textBox, title, channel, description} = styles;
   return(
     <View>
       <Card containerStyle={card}>
-        <Image
+        <Video video={video} />
+        {/* <Image
           style={image}
           source={{uri: video.snippet.thumbnails.medium.url}}
-        />
+        /> */}
         <View style={textBox}>
           <Text style={title}>
             {video.snippet.title}

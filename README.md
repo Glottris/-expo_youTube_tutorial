@@ -1,56 +1,40 @@
 
 
-# React-Native Expo you_tube_tutorial
+# React-Native Expo AcornTube tutorial
 ## Overview
 This tutorial will go thru step by step how to make a video app that browse YouTube, using Expo
 Insert Image here!
 
 ## Prerequisites
 
-* [Node.js](https://www.npmjs.com/)
-* YouTube API key
-* Android or IOS emulator
+* [prerequisites](../../prerequisites.md)
 
-## Optional Prerequisites
-* Atom
-* Visual Studio Code
-* Another text editor suitable for Javascript
+## Create Hello App
 
-## Setup [Expo](https://expo.io/)
-In your shell of preference at the location you wish to store the project run the following
-``` bash
-> npm install expo-cli --global
-
-> expo init my-new-project
-> cd my-new-project
-> expo start
+In the prerequisites, you should have already generated acorntube. If not, do this:
+```bash
+create-react-native-app acorntube
 ```
-This initiates new project with your chosen name.
-`start expo` will print an address like this:
- `> Expo DevTools is running at http://localhost:19002
-`Open this address in a browser.
 
-Before we can run our project form here we need to start an emulator or connect a phone.
-If you have an emulator installed you can go ahead and start that one or connect your phone, and **skip** the next section.
+## Again
+```sh
+react-native init tutorial_acorntube
+cd tutorial_acorntube/
+```
+```
+npm install --save react-native-vector-icons react-native-elements youtube-api-search
+```
+or
 
-### Emulator from Android Studio
-Otherwise we need to install one, android studio includes the android emulator. You can download and read how to install android Studio from here: https://developer.android.com/studio/
+```
+yarn add react-native-vector-icons react-native-elements youtube-api-search
+```
 
-Step by step using AndroidStudio:
-1. Open, android studio.
-2. Navigate to `Tools -> AVD Manager`
-3. This will open a dialog box, here press create new virtual device.
-4. Here select a device to create, I have used Nexus5X.
-5. Press `next` and download the needed apis.
-6. Press `next` again and select a name and orientation and press `Finish`
+then
 
-## Running basic 'Hello world'
-Once we have an emulator or device connected go back to the DevTools page we opened in the browser earlier and press `Run on Android device/emulator`.
-This will install expo and prompt you to allow it to show over other apps, accept.
-
-Now we can see our app running, it's just a white screen saying
-`Open up App.js to start working on your app!`
-So open App.js in your preferred editor and change the text to the mandatory `Hello World`, save it twice and see it update on your device/emulator.
+```
+react-native link
+```
 
 ## Component structure
 Our app will contain tree main components, a header, a search-bar and a list of videos(search results).
@@ -196,15 +180,16 @@ The log can be seen under your build tab on the DevTool browser page or where yo
 ### Move SearchBar to a new component
 So we don't actually want to re-render our whole app every time someone types something, and we want to get a better overview of our main structure.
 So lets move the SearchBar to a new component in a new file.
-Create **SerachBar.js** and move the SearchBar to it.
+Create **SearchBar.js** and move the SearchBar to it.
 
-**SerachBar.js**
+**SearchBar.js**
 ```javascript
+/* @flow */
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { Platform, StyleSheet, View, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 
-export class SearchBar extends React.Component {
+export class SearchBar extends React.Component<any, any> {
   state = { searchTerm: '' };
   render() {
     return (
@@ -215,14 +200,22 @@ export class SearchBar extends React.Component {
           value={this.state.searchTerm}
         />
         <Button
-          buttonStyle={styles.button}
-          title="Search"
-          onPress={() => console.log(this.state.searchTerm)}
+          buttonStyle={styles.buttonStyle}
+          textStyle={styles.buttonTextStyle}
+          title={this.props.loading ? "Loading..." : "Search"}
+          onPress={() => this.props.onPressSearch(this.state.searchTerm)}
         />
       </View>
     );
   }
 }
+
+// Add an underline on iOS.
+const textInputIos = Platform.OS === 'ios' ? {
+  borderColor: 'gray',
+  borderBottomWidth: 1
+} : {};
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -231,16 +224,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    flex: 1,
-    marginLeft: 10
+    flex: 10,
+    color: 'black',
+    marginLeft: 10,
+    ...textInputIos
   },
-  button: {
+  buttonStyle: {
+    flex:1,
     height: 30,
     marginBottom: 8
+  },
+  buttonTextStyle: {
+    color:'white',
+    height: 24,
+    fontSize: 18,
+    alignSelf: 'center'
   }
 });
+
 ```
-So we moved our styles and `View` encompassing the serachBar to this new file.
+So we moved our styles and `View` encompassing the SearchBar to this new file.
 Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component. And add it bellow our header.
 
 **App.js**
@@ -293,7 +296,7 @@ export default class App extends React.Component {
   }
 }
 ```
-And in **SearchBar** we change our `onPress` inside our Button compenent to:
+And in **SearchBar** we change our `onPress` inside our Button component to:
 ```javascript
 onPress={() => this.props.onPressSearch(this.state.searchTerm)}
 ```

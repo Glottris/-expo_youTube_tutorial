@@ -1,9 +1,8 @@
 
 
-# React-Native Expo AcornTube tutorial
+# React-Native AcornTube tutorial
 ## Overview
-This tutorial will go thru step by step how to make a video app that browse YouTube, using Expo
-Insert Image here!
+This tutorial will go thru step by step how to make a video app that browse YouTube, using React Native
 
 ## Prerequisites
 
@@ -33,7 +32,7 @@ react-native link
 ```
 
 ## Component structure
-Our app will contain tree main components, a header, a search-bar and a list of videos(search results).
+Our app will contain three main components, a header, a search-bar and a list of videos(search results).
 ```
 App
  +-- Header
@@ -271,7 +270,7 @@ We create a new function that calls this with our `API_KEY` and `searchTerm` and
 ## Loading state
 In this section we create a loading state that is `true` while we wait for the YTSearch function to return and pass it to the search button.
 
-## **App.js** and imports our `VideoList` component, storse the video data in a list inside our `state` and add a `VideoList` element after our `SearchBar` passing in the videos list from our *state*
+**App.js** imports our `VideoList` component, stores the video data in a list inside our `state` and add a `VideoList` element after our `SearchBar` passing in the videos list from our *state*
 
 **App.js**
 ```javascript
@@ -318,9 +317,9 @@ export default class App extends React.Component {
 ```
 Try this out and take a look at the log to see what we get from the YouTubeAPI.
 
-### Loading state (Optional?)
+### Loading state
 
-Update **SearchBar.js** to change the `Button` title to depend on the loading state, passed thru props.
+Update **SearchBar.js** to change the `Button` title to depend on the loading state, passed through props.
 ```javascript
 title={this.props.loading ? "Loading..." : "Search"}
 ```

@@ -10,24 +10,20 @@ Insert Image here!
 * [prerequisites](../../prerequisites.md)
 
 ## Create Hello App
-
-In the prerequisites, you should have already generated acorntube. If not, do this:
-```bash
-create-react-native-app acorntube
-```
-
-## Again
 ```sh
 react-native init tutorial_acorntube
 cd tutorial_acorntube/
 ```
-```
-npm install --save react-native-vector-icons react-native-elements youtube-api-search
-```
-or
+
+Install some extra components used for this app.
 
 ```
-yarn add react-native-vector-icons react-native-elements youtube-api-search
+npm install --save react-native-elements youtube-api-search
+```
+or (yarn)
+
+```
+yarn add react-native-elements youtube-api-search
 ```
 
 then
@@ -46,14 +42,16 @@ App
         +-- VideoListItem /- thumbnail - text
 ```
 
-## Header
-For the header we will use [react-native-element](https://react-native-training.github.io/react-native-elements) package, so first we need to install it.
-```bash
-npm install --save react-native-elements
-# or with yarn
-yarn add react-native-elements
+Create 3 additional files beside App.js:
+- SearchBar.js
+- VideoListItem.js
+- VideoList.js
+
+```sh
+touch SearchBar.js
+touch VideoListItem.js
+touch VideoList.js
 ```
-Documentation: https://react-native-training.github.io/react-native-elements/docs/0.19.0/header.html#header-with-default-components
 
 Then we import it in our **App.js** file, and add a new `Header` element
 ```javascript
@@ -64,7 +62,7 @@ import { Header } from 'react-native-elements';
 export default class App extends React.Component {
   render() {
     return (
-      <View>
+      <View style={{flex:1}}>
         <Header
           centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
@@ -76,34 +74,94 @@ export default class App extends React.Component {
 ```
 I removed the styling from the view so the header is not centered.
 Now your application should look like this:
-![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample1.JPG "ExpoExample1")
+![AcornTube1](images/screenshot_just_header.png)
 
 ## Search bar
 Our search bar will consist of two parts, an input filed and a button, wrapped in a 'View' component.
 We import `TextInput` from **react-native** and `Button` from **react-native-elements** and create a view underneath our header with one of each element
 ```javascript
 import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { Header, Button } from 'react-native-elements';
+import { Platform, StyleSheet, View, TextInput } from 'react-native';
+import { Button } from 'react-native-elements';
+
+export class SearchBar extends React.Component {
+  state = { searchTerm: '' };
+  render() {
+    return (
+      <View style={styles.container}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={searchTerm => this.setState({searchTerm})}
+          value={this.state.searchTerm}
+        />
+        <Button
+          buttonStyle={styles.button}
+          textStyle={styles.buttonTextStyle}
+          title="Search"
+          onPress={() => this.props.onPressSearch(this.state.searchTerm)}
+        />
+      </View>
+    );
+  }
+}
+
+// Add an underline on iOS.
+const textInputIos = Platform.OS === 'ios' ? {
+  borderColor: 'gray',
+  borderBottomWidth: 1
+} : {};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInput: {
+    ...textInputIos,
+    flex: 1,
+    marginLeft: 10
+  },
+  button: {
+    height: 30,
+    marginBottom: 8
+  },
+  buttonTextStyle: {
+    color:'white',
+    height: 24,
+    fontSize: 18,
+    alignSelf: 'center'
+  }
+});
+
+```
+So we moved our styles and `View` encompassing the SearchBar to this new file.
+Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component. And add it bellow our header.
+
+**App.js**
+```javascript
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Header } from 'react-native-elements';
+import { SearchBar } from './SearchBar';
 
 export default class App extends React.Component {
   render() {
     return (
-      <View>
+      <View style={{flex:1}}>
         <Header
-          centerComponent={{text: 'YouTubeor', style: {color: '#fff'}}}
+          centerComponent={{text: 'AcornTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
-        <View>
-          <TextInput />
-          <Button />
-        </View>
+        <SearchBar />
       </View>
     );
   }
 }
 ```
-if we run it now it will look like this: ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample2.JPG "ExpoExample2")
+
+if we run it now it will look like this: ![AcornTube1](images/with_searchbar_2.png)
 
 So we need to style our layout, add an action to the button and capture the search input.
 In this next step we add the styles. We change the flexDirection of the container style to `row` this means it will expand horizontally to fill the whole row.
@@ -172,101 +230,7 @@ export default class App extends React.Component {
   }
 }
 ```
-Go ahead and test that you can type a search and see it logged when you press search.
-The log can be seen under your build tab on the DevTool browser page or where you ran `expo start`
 
-![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample3.JPG "ExpoExample3")
-
-### Move SearchBar to a new component
-So we don't actually want to re-render our whole app every time someone types something, and we want to get a better overview of our main structure.
-So lets move the SearchBar to a new component in a new file.
-Create **SearchBar.js** and move the SearchBar to it.
-
-**SearchBar.js**
-```javascript
-/* @flow */
-import React from 'react';
-import { Platform, StyleSheet, View, TextInput } from 'react-native';
-import { Button } from 'react-native-elements';
-
-export class SearchBar extends React.Component<any, any> {
-  state = { searchTerm: '' };
-  render() {
-    return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={searchTerm => this.setState({searchTerm})}
-          value={this.state.searchTerm}
-        />
-        <Button
-          buttonStyle={styles.buttonStyle}
-          textStyle={styles.buttonTextStyle}
-          title={this.props.loading ? "Loading..." : "Search"}
-          onPress={() => this.props.onPressSearch(this.state.searchTerm)}
-        />
-      </View>
-    );
-  }
-}
-
-// Add an underline on iOS.
-const textInputIos = Platform.OS === 'ios' ? {
-  borderColor: 'gray',
-  borderBottomWidth: 1
-} : {};
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textInput: {
-    flex: 10,
-    color: 'black',
-    marginLeft: 10,
-    ...textInputIos
-  },
-  buttonStyle: {
-    flex:1,
-    height: 30,
-    marginBottom: 8
-  },
-  buttonTextStyle: {
-    color:'white',
-    height: 24,
-    fontSize: 18,
-    alignSelf: 'center'
-  }
-});
-
-```
-So we moved our styles and `View` encompassing the SearchBar to this new file.
-Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component. And add it bellow our header.
-
-**App.js**
-```javascript
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Header } from 'react-native-elements';
-import { SearchBar } from './SearchBar';
-
-export default class App extends React.Component {
-  render() {
-    return (
-      <View>
-        <Header
-          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
-          outerContainerStyles={{backgroundColor: '#E62117'}}
-        />
-        <SearchBar />
-      </View>
-    );
-  }
-}
-```
 ### Passing back the searchTerm to our main app
 We need to get the search term back to our main application to fetch the data from the youTubeAPI to be displayed in the videoList.
 We do this by passing a function reference to our `SearchBar` object, that we then call when the search button is pressed.

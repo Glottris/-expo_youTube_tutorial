@@ -1,8 +1,9 @@
+/* @flow */
 import React from 'react';
 import { Platform, StyleSheet, View, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 
-export class SearchBar extends React.Component {
+export class SearchBar extends React.Component<any, any> {
   state = { searchTerm: '' };
   render() {
     return (
@@ -13,7 +14,7 @@ export class SearchBar extends React.Component {
           value={this.state.searchTerm}
         />
         <Button
-          buttonStyle={styles.button}
+          buttonStyle={styles.buttonStyle}
           textStyle={styles.buttonTextStyle}
           title={this.props.loading ? "Loading..." : "Search"}
           onPress={() => this.props.onPressSearch(this.state.searchTerm)}
@@ -37,11 +38,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    ...textInputIos,
-    flex: 1,
-    marginLeft: 10
+    flex: 10,
+    color: 'black',
+    marginLeft: 10,
+    ...textInputIos
   },
-  button: {
+  buttonStyle: {
+    flex:1,
     height: 30,
     marginBottom: 8
   },

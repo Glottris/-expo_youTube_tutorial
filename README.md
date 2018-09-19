@@ -1,38 +1,59 @@
 
 
-# React-Native AcornTube tutorial
+# React-Native Expo you_tube_tutorial
 ## Overview
-This tutorial will go thru step by step how to make a video app that browse YouTube, using React Native
+This tutorial will go thru step by step how to make a video app that browse YouTube, using Expo
+Insert Image here!
 
 ## Prerequisites
 
-* [prerequisites](../../prerequisites.md)
+* [Node.js](https://www.npmjs.com/)
+* YouTube API key
+* Android or IOS emulator
 
-## Create Hello App
-```sh
-react-native init tutorial_acorntube
-cd tutorial_acorntube/
-```
+## Optional Prerequisites
+* Atom
+* Visual Studio Code
+* Another text editor suitable for Javascript
 
-Install some extra components used for this app.
+## Setup [Expo](https://expo.io/)
+In your shell of preference at the location you wish to store the project run the following
+``` bash
+> npm install expo-cli --global
 
+> expo init my-new-project
+> cd my-new-project
+> expo start
 ```
-npm install --save react-native-elements youtube-api-search
-```
-or (yarn)
+This initiates new project with your chosen name.
+`start expo` will print an address like this:
+ `> Expo DevTools is running at http://localhost:19002
+`Open this address in a browser.
 
-```
-yarn add react-native-elements youtube-api-search
-```
+Before we can run our project form here we need to start an emulator or connect a phone.
+If you have an emulator installed you can go ahead and start that one or connect your phone, and **skip** the next section.
 
-then
+### Emulator from Android Studio
+Otherwise we need to install one, android studio includes the android emulator. You can download and read how to install android Studio from here: https://developer.android.com/studio/
 
-```
-react-native link
-```
+Step by step using AndroidStudio:
+1. Open, android studio.
+2. Navigate to `Tools -> AVD Manager`
+3. This will open a dialog box, here press create new virtual device.
+4. Here select a device to create, I have used Nexus5X.
+5. Press `next` and download the needed apis.
+6. Press `next` again and select a name and orientation and press `Finish`
+
+## Running basic 'Hello world'
+Once we have an emulator or device connected go back to the DevTools page we opened in the browser earlier and press `Run on Android device/emulator`.
+This will install expo and prompt you to allow it to show over other apps, accept.
+
+Now we can see our app running, it's just a white screen saying
+`Open up App.js to start working on your app!`
+So open App.js in your preferred editor and change the text to the mandatory `Hello World`, save it twice and see it update on your device/emulator.
 
 ## Component structure
-Our app will contain three main components, a header, a search-bar and a list of videos(search results).
+Our app will contain tree main components, a header, a search-bar and a list of videos(search results).
 ```
 App
  +-- Header
@@ -41,7 +62,16 @@ App
         +-- VideoListItem /- thumbnail - text
 ```
 
-Import Header in our **App.js** file, and add a new `Header` element
+## Header
+For the header we will use [react-native-element](https://react-native-training.github.io/react-native-elements) package, so first we need to install it.
+```bash
+npm install --save react-native-elements
+# or with yarn
+yarn add react-native-elements
+```
+Documentation: https://react-native-training.github.io/react-native-elements/docs/0.19.0/header.html#header-with-default-components
+
+Then we import it in our **App.js** file, and add a new `Header` element
 ```javascript
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -50,7 +80,7 @@ import { Header } from 'react-native-elements';
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{flex:1}}>
+      <View>
         <Header
           centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
@@ -60,27 +90,118 @@ export default class App extends React.Component {
   }
 }
 ```
-
-Create 3 additional files beside App.js:
-- SearchBar.js
-- VideoListItem.js
-- VideoList.js
-
-```sh
-touch SearchBar.js
-touch VideoListItem.js
-touch VideoList.js
-```
-
+I removed the styling from the view so the header is not centered.
 Now your application should look like this:
-![AcornTube1](images/screenshot_just_header.png)
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample1.JPG "ExpoExample1")
 
 ## Search bar
-Our search bar consists of two parts, an input field and a button, wrapped in a 'View' component.
+Our search bar will consist of two parts, an input filed and a button, wrapped in a 'View' component.
 We import `TextInput` from **react-native** and `Button` from **react-native-elements** and create a view underneath our header with one of each element
 ```javascript
 import React from 'react';
-import { Platform, StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { Header, Button } from 'react-native-elements';
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTubeor', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <View>
+          <TextInput />
+          <Button />
+        </View>
+      </View>
+    );
+  }
+}
+```
+if we run it now it will look like this: ![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample2.JPG "ExpoExample2")
+
+So we need to style our layout, add an action to the button and capture the search input.
+In this next step we add the styles. We change the flexDirection of the container style to `row` this means it will expand horizontally to fill the whole row.
+```javascript
+    return (
+      ...
+        <View style={styles.container}>
+          <TextInput
+            style={styles.textInput}
+          />
+          <Button
+            buttonStyle={styles.button}
+            title="Search"
+          />
+        </View>
+...
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInput: {
+    flex: 1,
+    marginLeft: 10
+  },
+  button: {
+    height: 30,
+    marginBottom: 8
+  }
+});
+```
+---
+Next we add a `state` variable to hold our searchTerm. `state` is a special keyword in react that will re-render components when changed with the setState function.
+
+In our **TextInput** component we then update this state and the value of the text field to whatever is typed.
+
+In our **Button** component we add an `onPress` function that just logs our searchTerm for now.
+```javascript
+export default class App extends React.Component {
+  state = { searchTerm: '' };
+
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <View style={styles.container}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={searchTerm => this.setState({searchTerm})}
+            value={this.state.searchTerm}
+          />
+          <Button
+            buttonStyle={styles.button}
+            title="Search"
+            onPress={() => console.log(this.state.searchTerm)}
+          />
+        </View>
+      </View>
+    );
+  }
+}
+```
+Go ahead and test that you can type a search and see it logged when you press search.
+The log can be seen under your build tab on the DevTool browser page or where you ran `expo start`
+
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample3.JPG "ExpoExample3")
+
+### Move SearchBar to a new component
+So we don't actually want to re-render our whole app every time someone types something, and we want to get a better overview of our main structure.
+So lets move the SearchBar to a new component in a new file.
+Create **SerachBar.js** and move the SearchBar to it.
+
+**SerachBar.js**
+```javascript
+import React from 'react';
+import { StyleSheet, View, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 
 export class SearchBar extends React.Component {
@@ -95,21 +216,13 @@ export class SearchBar extends React.Component {
         />
         <Button
           buttonStyle={styles.button}
-          textStyle={styles.buttonTextStyle}
           title="Search"
-          onPress={() => this.props.onPressSearch(this.state.searchTerm)}
+          onPress={() => console.log(this.state.searchTerm)}
         />
       </View>
     );
   }
 }
-
-// Add an underline on iOS.
-const textInputIos = Platform.OS === 'ios' ? {
-  borderColor: 'gray',
-  borderBottomWidth: 1
-} : {};
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -118,25 +231,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
-    ...textInputIos,
     flex: 1,
     marginLeft: 10
   },
   button: {
     height: 30,
     marginBottom: 8
-  },
-  buttonTextStyle: {
-    color:'white',
-    height: 24,
-    fontSize: 18,
-    alignSelf: 'center'
   }
 });
-
 ```
-
-Lets go back to **App.js** and import our new SearchBar component.  We can also change the displayed name to "AcornTube"
+So we moved our styles and `View` encompassing the serachBar to this new file.
+Lets go back to **App.js** and cleanup the imports we don't need and import our new searchBar component. And add it bellow our header.
 
 **App.js**
 ```javascript
@@ -148,9 +253,9 @@ import { SearchBar } from './SearchBar';
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{flex:1}}>
+      <View>
         <Header
-          centerComponent={{text: 'AcornTube', style: {color: '#fff'}}}
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
         <SearchBar />
@@ -159,118 +264,62 @@ export default class App extends React.Component {
   }
 }
 ```
-
-If we run it now it will look like this: ![AcornTube1](images/with_searchbar_2.png)
-
-**VideoListItem.js**
-
-We now need to add the list of search results. We start with VideoListItem.js.  This defines how each found video is displayed.  
-
-```javascript
-import React from 'react';
-import { StyleSheet, View, Text, Image} from 'react-native'
-import { Card } from 'react-native-elements'
-
-const styles = StyleSheet.create({
-  card: { padding: 5 },
-  image: { alignSelf: 'stretch', height: 180 },
-  textBox: { flex: 1, padding: 1 },
-  title: { fontSize: 12, },
-  channel: { fontSize: 11, color: '#777', alignSelf: 'flex-end' },
-  description: { fontSize: 10, alignSelf: 'center' }
-});
-
-const VideoListItem = ({video}) => {
-  return(
-    <View>
-      <Card containerStyle={styles.card}>
-        <Image
-          style={styles.image}
-          source={{uri: video.snippet.thumbnails.medium.url}}
-        />
-        <View style={styles.textBox}>
-          <Text style={styles.title}>
-            {video.snippet.title}
-          </Text>
-          <Text style={styles.channel}>
-            {video.snippet.channelTitle}
-          </Text>
-          <Text style={styles.description}>
-            {video.snippet.description}
-          </Text>
-        </View>
-      </Card>
-    </View>
-  );
-};
-
-export default VideoListItem;
-```
-**VideoList.js**
-
-Here we prepare to use the data from the API, that we will read into objects using the *map* function. We return a `View` component inside a `ScrollView` component. The `View` component is styled with some margins and inside it we call a function called *videoItems*.
-
-Now we create a helper utility which takes a "videos" object and maps each element to a VideoListItem, then returns a ScrollView  containing the items.
-
-```javascript
-import React from 'react';
-import {ScrollView, View} from 'react-native';
-import VideoListItem from './VideoListItem'
-
-const VideoList = ({videos}) => {
-  const videoItems = videos.map( video => (
-    <VideoListItem
-      key={video.etag}
-      video={video}
-    />
-  ));
-
-  return (
-    <ScrollView>
-      <View style={{marginBottom: 10, marginLeft: 10, marginRight: 10 }}>
-        {videoItems}
-      </View>
-    </ScrollView>
-  );
-};
-
-export default VideoList;
-
-```
-## Putting it all together in App.js
-
-The `state` variable in App.js holds our searchTerm. `state` is a special keyword in react that will re-render components when changed with the setState function.
-
-In our **TextInput** component we update this state and the value of the text field to whatever is typed.
-
-In our **Button** component we have an `onPress` function that just logs our searchTerm for now.
-
 ### Passing back the searchTerm to our main app
 We need to get the search term back to our main application to fetch the data from the youTubeAPI to be displayed in the videoList.
 We do this by passing a function reference to our `SearchBar` object, that we then call when the search button is pressed.
 Adding a function in **App.js**, and passing it to `SearchBar`
+```javascript
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Header } from 'react-native-elements';
+import { SearchBar } from './SearchBar';
 
-And in **SearchBar** we change our `onPress` inside our Button component to:
+export default class App extends React.Component {
+  onPressSearch = searchTerm => {
+    console.log(searchTerm)
+  }
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          onPressSearch={this.onPressSearch}
+        />
+      </View>
+    );
+  }
+}
+```
+And in **SearchBar** we change our `onPress` inside our Button compenent to:
 ```javascript
 onPress={() => this.props.onPressSearch(this.state.searchTerm)}
 ```
 the `props` keyword is short for properties, and is used like arguments to components.
 Test that it works :)
 
-App.js uses the API key created in the prerequisites, like this.
+## Video List
+### YouTube API key
+Before we start creating our Video list we need to get the data, for this we need our  [YouTubeAPI key](https://github.com/appsupport-at-acorn/react-and-rn-intro/blob/master/tutorial/react/prerequisites.adoc#generate-a-youtube-api-key)
+
+for this simple tutorial we will just store the key in our **App.js** like this:
 ```javascript
 const API_KEY = 'YOUR-API-KEY-HERE' // or use mine 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 ```
 ** NOTE that it's very poor security practice to store anything you wish to maintain secret in your application.**
 
+### Installing youtube-api-search plugin module
+in your project directory run
+```bash
+npm install --save youtube-api-search
+# or
+yarn add youtube-api-search
+```
 ### Importing and calling youtube-api-search
-**App.js** imports a function called `YTSearch` from the `youtube-api-search`.
+So now we import a function called `YTSearch` from the `youtube-api-search`.
 We create a new function that calls this with our `API_KEY` and `searchTerm` and log what is returned. We call this function from our `onPressSearch` passing it the `searchTerm`
-
-## Loading state
-In this section we create a loading state that is `true` while we wait for the YTSearch function to return and pass it to the search button.
-
-**App.js** imports our `VideoList` component, stores the video data in a list inside our `state` and add a `VideoList` element after our `SearchBar` passing in the videos list from our *state*
 
 **App.js**
 ```javascript
@@ -278,19 +327,121 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Header } from 'react-native-elements';
 import { SearchBar } from './SearchBar';
-import VideoList from './VideoList'
 import YTSearch from 'youtube-api-search';
 
 const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 
 export default class App extends React.Component {
+  onPressSearch = searchTerm => {
+    this.searchYouTube(searchTerm)
+  }
+  searchYouTube = searchTerm => {
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
+      console.log(videos);
+    })
+  }
+
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          onPressSearch={this.onPressSearch}
+        />
+      </View>
+    );
+  }
+}
+```
+Try this out and take a look at the log to see what we get from the YouTubeAPI.
+
+### Loading state (Optional?)
+In this section we create a loading state that is `true` while we wait for the YTSearch function to return and pass it to the search button.
+
+```javascript
+export default class App extends React.Component {
+state = {
+  loading: false
+}
+  onPressSearch = searchTerm => {
+    this.searchYouTube(searchTerm)
+  }
+  searchYouTube = searchTerm => {
+    this.setState({loading: true});
+    YTSearch({key: API_KEY, term: searchTerm}, videos => {
+      console.log(videos);
+      this.setState({loading: false});
+    })
+  }
+
+  render() {
+    return (
+      <View>
+        <Header
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
+          outerContainerStyles={{backgroundColor: '#E62117'}}
+        />
+        <SearchBar
+          loading={this.state.loading}
+          onPressSearch={this.onPressSearch}
+        />
+      </View>
+    );
+  }
+}
+```
+
+In **SearchBar.js** change the `Button` title to depend on the loading state, passed thru props.
+```javascript
+title={this.props.loading ? "Loading..." : "Search"}
+```
+### VideoList Component
+Now we are ready to make our `VideoList` and `VideoListItem` components.
+
+New file **VideoList.js**
+```javascript
+import React from 'react';
+import {ScrollView, View} from 'react-native';
+
+const VideoList = ({videos}) => {
+  const videoItems = videos.map( video => (
+    <View />
+  ));
+
+  return (
+    <ScrollView>
+      <View style={{marginBottom: 10,
+                    marginLeft: 10,
+                    marginRight: 10 }}>
+        {videoItems}
+      </View>
+    </ScrollView>
+  );
+};
+
+export default VideoList;
+```
+Here we prepare to use the data from the API, that we will read into objects using the *map* function. We return a `View` component inside a `ScrollView` component. The `View` component is styled with some margins and inside it we call a function called *videoItems*. Here we will put a videoListItem, but for now we just return an empty`View`
+
+Now we go back to **App.js** and import our `VideoList` component, store the video data in a list inside our `state` and add a `VideoList` element after our `SearchBar` passing in the videos list from our *state*
+
+**App.js**
+```javascript
+import VideoList from './VideoList'
+...
+export default class App extends React.Component {
   state = {
     loading: false,
     videos: []
   }
+
   onPressSearch = searchTerm => {
     this.searchYouTube(searchTerm)
   }
+
   searchYouTube = searchTerm => {
     this.setState({loading: true});
     YTSearch({key: API_KEY, term: searchTerm}, videos => {
@@ -300,9 +451,9 @@ export default class App extends React.Component {
   render() {
     const {loading, videos} = this.state;
     return (
-      <View style={{flex:1}}>
+      <View>
         <Header
-          centerComponent={{text: 'AcornTube', style: {color: '#fff'}}}
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
         <SearchBar
@@ -312,14 +463,113 @@ export default class App extends React.Component {
         <VideoList videos={videos}/>
       </View>
     );
-  }
-}
 ```
-Try this out and take a look at the log to see what we get from the YouTubeAPI.
+I also added a shorthand for `this.state` for the *loading* and *videos* variables.
 
-### Loading state
-
-Update **SearchBar.js** to change the `Button` title to depend on the loading state, passed through props.
+### VideoListItem Component
+New file **VideoListItem.js**
 ```javascript
-title={this.props.loading ? "Loading..." : "Search"}
+import React from 'react';
+import { View, Text, Image } from 'react-native'
+
+const VideoListItem = ({video}) => {
+  return(
+    <View>
+      <Image
+        style={{ height: 180 }}
+        source={{uri: video.snippet.thumbnails.medium.url}}
+      />
+      <Text>{video.snippet.title}</Text>
+      <Text>{video.snippet.channelTitle}</Text>
+      <Text>{video.snippet.description}</Text>
+    </View>
+  );
+};
+
+export default VideoListItem;
 ```
+Here we import the basic `View, Text, Image` from react native and return some tags filled with the data from a video object.
+
+Now we need to go back to **VideoList.js** and use this and pass in the video data.
+```javascript
+import VideoListItem from './VideoListItem'
+...
+  const videoItems = videos.map( video => (
+    <VideoListItem
+      key={video.etag}
+      video={video}
+    />
+  ));
+```
+
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample4.JPG "ExpoExample4")
+
+
+## Card Styling
+
+In **VideoListItem.js** we import a `Card` component and add styling
+```javascript
+import React from 'react';
+import { View, Text, Image} from 'react-native'
+import { Card } from 'react-native-elements'
+
+const VideoListItem = ({video}) => {
+  const {card, image, textBox, title, channel, description} = styles;
+  return(
+    <View>
+      <Card containerStyle={card}>
+        <Image
+          style={image}
+          source={{uri: video.snippet.thumbnails.medium.url}}
+        />
+        <View style={textBox}>
+          <Text style={title}>
+            {video.snippet.title}
+          </Text>
+          <Text style={channel}>
+            {video.snippet.channelTitle}
+          </Text>
+          <Text style={description}>
+            {video.snippet.description}
+          </Text>
+        </View>
+      </Card>
+    </View>
+  );
+};
+
+const styles = {
+  card: {
+    padding: 5
+  },
+  image: {
+    alignSelf: 'stretch',
+    height: 180
+  },
+  textBox: {
+    flex: 1,
+    padding: 1
+  },
+  title: {
+    fontSize: 12,
+  },
+  channel: {
+    fontSize: 11,
+    color: '#777',
+    alignSelf: 'flex-end'
+  },
+  description: {
+    fontSize: 10,
+    alignSelf: 'center'
+  }
+};
+
+export default VideoListItem;
+```
+![alt text](https://github.com/Glottris/-expo_youTube_tutorial/blob/master/assets/expoExample5.JPG "ExpoExample5")
+
+!!! I had some problem here, on android emulator, when I can't scroll all the way down. The last part is hidden under the navigation bar, i added a style of `flex: 1` to the top `View` in **App.js** to workaround this. !!!
+
+
+
+## Play Video

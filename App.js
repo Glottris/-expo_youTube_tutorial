@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Header } from 'react-native-elements';
 import { SearchBar } from './SearchBar';
-import VideoList from './VideoList'
 import YTSearch from 'youtube-api-search';
+import VideoList from './VideoList'
 
 const API_KEY = 'AIzaSyDNuniWTHCHeuq4ZxK-WWbO0pENHYMMCMs'
 
@@ -23,12 +23,13 @@ export default class App extends React.Component {
       this.setState({loading: false, videos: videos});
     })
   }
+
   render() {
     const {loading, videos} = this.state;
     return (
       <View style={{flex:1}}>
         <Header
-          centerComponent={{text: 'AcornTube', style: {color: '#fff'}}}
+          centerComponent={{text: 'YouTube', style: {color: '#fff'}}}
           outerContainerStyles={{backgroundColor: '#E62117'}}
         />
         <SearchBar
